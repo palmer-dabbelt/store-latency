@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 #define THREADS 8
-#define ITERATIONS 0x10000ULL
+#define ITERATIONS (1ULL << 24)
 
 struct thread_args {
 	unsigned id;
