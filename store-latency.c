@@ -3,7 +3,6 @@
 
 #define THREADS 8
 #define ITERATIONS 0x10000ULL
-#define MAGIC_FENCE
 
 struct thread_args {
 	unsigned id;
