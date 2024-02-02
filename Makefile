@@ -1,6 +1,12 @@
-all: store-latency-magic store-latency-boring
+all: store-latency-magic store-latency-boring store-latency.diff
 	time ./store-latency-magic
 	time ./store-latency-boring
+
+store-latency.diff: store-latency-magic.dump store-latency-boring.dump
+	diff -u $^ > $@
+
+%.dump: %
+	objdump -d $^ > $@
 
 store-latency-magic: store-latency-magic.o
 

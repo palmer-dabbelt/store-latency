@@ -39,6 +39,8 @@ void *thread(void *args_uncast) {
 
 #ifdef MAGIC_FENCE
 		__asm__ volatile ("fence w,o");
+#else
+		__asm__ volatile ("addi x0, x0, 32");
 #endif
 	}
 }

@@ -1,3 +1,5 @@
 /store-latency-*
 /*.o
 *.swp
+*.dump
+*.diff
