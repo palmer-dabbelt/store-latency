@@ -14,7 +14,7 @@
 #ifdef MAGIC_FENCE
 #define DO_MAGIC_FENCE() RISCV_FENCE(w, o)
 #else
-#define DO_MAGIC_FENCE() do {} while(0)
+#define DO_MAGIC_FENCE() __asm__ volatile ("addi x0, x1, 9" ::: "memory")
 #endif
 
 #define READ_ONCE(x)  (*(const volatile typeof(x) *)&(x))
