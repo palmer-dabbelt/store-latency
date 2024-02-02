@@ -6,14 +6,13 @@
 
 struct thread_args {
 	unsigned id;
-	unsigned long *shared;
+	unsigned *shared;
 };
 
-static unsigned long global;
+static unsigned global;
 
 void *thread(void *args_uncast) {
 	struct thread_args *args = args_uncast;
-	long locked;
 
 	for (size_t i = 0; i < ITERATIONS; ++i) {
 		unsigned long tmp;
@@ -27,7 +26,7 @@ void *thread(void *args_uncast) {
 			: [tmp]"=&r"(tmp)
 			: [mem]"r"(args->shared),
 			  [ulv]"r"(0),
-			  [lkv]"r"(locked)
+			  [lkv]"r"(1)
 		);
 
 		__asm__ volatile (
