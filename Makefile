@@ -1,7 +1,7 @@
 all: store-latency-magic store-latency-boring store-latency.diff
 	cat store-latency.diff
-	time ./store-latency-magic
-	time ./store-latency-boring
+	bash -c "time ./store-latency-magic"
+	bash -c "time ./store-latency-boring"
 
 store-latency.diff: store-latency-magic.dump store-latency-boring.dump
 	-diff -u $^ > $@
