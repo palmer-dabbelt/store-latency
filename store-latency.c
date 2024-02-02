@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 #define THREADS 8
-#define ITERATIONS (1ULL << 24)
+#define ITERATIONS 0x1000001ULL
 
 struct thread_args {
 	unsigned id;
@@ -13,20 +13,28 @@ static unsigned long global;
 
 void *thread(void *args_uncast) {
 	struct thread_args *args = args_uncast;
+	long locked;
 
 	for (size_t i = 0; i < ITERATIONS; ++i) {
-		unsigned long cur;
-		do {
-			__asm__ volatile (
-				"ld %0, 0(%1)"
-				: "=r"(cur)
-				: "r"(args->shared));
-		} while ((cur % THREADS) != args->id);
+		unsigned long tmp;
 
 		__asm__ volatile (
-			"sd %0, 0(%1)"
+			"1:\n\t"
+			"lr.w %[tmp], 0(%[mem])\n\t"
+			"bne  %[tmp], %[ulv], 1b\n\t"
+			"sc.w %[tmp], %[lkv], 0(%[mem])\n\t"
+			"bnez %[tmp], 1b"
+			: [tmp]"=&r"(tmp)
+			: [mem]"r"(args->shared),
+			  [ulv]"r"(0),
+			  [lkv]"r"(locked)
+		);
+
+		__asm__ volatile (
+			"sw %[ulv], 0(%[mem])"
 			:
-			: "r"(cur + 1), "r"(args->shared)
+			: [ulv]"r"(0),
+			  [mem]"r"(args->shared)
 		);
 
 #ifdef MAGIC_FENCE

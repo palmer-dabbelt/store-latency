@@ -1,4 +1,6 @@
 all: store-latency-magic store-latency-boring
+	time ./store-latency-magic
+	time ./store-latency-boring
 
 store-latency-magic: store-latency-magic.o
 
